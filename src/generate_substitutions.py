@@ -9,6 +9,7 @@ import inspect
 import json
 import os
 import typing
+import random
 
 from src.classes.qadataset import QADataset
 from src.substitution_fns import *
@@ -29,7 +30,8 @@ def generate_substitutions(args):
     """
     dset_name = os.path.basename(args.inpath).split(".")[0]
     preprocessed_dataset = QADataset.load(dset_name)
-
+    
+    random.seed(args.seed)
     sub_fn = SUBSTITUTION_FNS[args.substitution]
     # Only pass in the arguments from args that are identically named in the function signature
     params = inspect.signature(sub_fn).parameters.values()
@@ -93,6 +95,12 @@ if __name__ == "__main__":
         const=True,
         default=False,
         help="Whether to replace every original answer alias in the context, or just the primary one.",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for reproducibility"
     )
 
     # Alias substitution-specific arguments
