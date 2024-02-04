@@ -42,6 +42,7 @@ The output file of this step is available [here](https://docs-assets.developer.a
 PYTHONPATH=. python src/load_dataset.py -d MRQANaturalQuestionsTrain -w wikidata/entity_info.json.gz
 PYTHONPATH=. python src/load_dataset.py -d MRQANaturalQuestionsDev -w wikidata/entity_info.json.gz
 ```
+Note: if the download links are not available, download the MRQA dataset from [Google Drive](https://drive.google.com/drive/folders/1b3rWFmxT7dLeMt4mv_Qzev_6flAJ9kas) and put the data folders in `datasets/`
 
 ### 4. Generate Substitutions
 ```
@@ -51,6 +52,15 @@ PYTHONPATH=. python src/generate_substitutions.py --inpath datasets/normalized/M
 
 See descriptions of the substitution policies (substitution-commands) we provide [here](#our-substitution-functions).
 Inspect the argparse and substitution-specific subparsers in `generate_substitutions.py` to see additional arguments.
+
+### 5. Generate and Process NQ-swap data
+```
+PYTHONPATH=. python src/generate_substitutions.py --inpath datasets/normalized/MRQANaturalQuestionsDev.jsonl --outpath datasets/substitution/MRQANaturalQuestionsDev_corpus_sub.jsonl --seed 42 corpus-substitution -n 1
+```
+Remove metadata from the raw MRQA dataset
+```
+python src/clean_dataset.py --input_path datasets/substitution/MRQANaturalQuestionsDev_corpus_sub.jsonl --output_path datasets/substitution/MRQANaturalQuestionsDev_corpus_sub_processed.jsonl
+```
 
 ## Our Substitution Functions
 
